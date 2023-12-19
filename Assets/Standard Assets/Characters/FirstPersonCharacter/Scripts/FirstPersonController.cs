@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using TMPro;
+
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -41,6 +43,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        private int count;
+        public GameObject winTextObject;
+
+
 
         // Use this for initialization
         private void Start()
@@ -51,10 +57,25 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
             m_StepCycle = 0f;
-            m_NextStep = m_StepCycle/2f;
+            m_NextStep = m_StepCycle / 2f;
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
-			m_MouseLook.Init(transform , m_Camera.transform);
+            m_MouseLook.Init(transform, m_Camera.transform);
+            count = 0;
+            SetCountText();
+            winTextObject.SetActive(false);
+
+        }
+
+        public TextMeshProUGUI countText;
+
+        void SetCountText()
+        {
+            countText.text = "Count: " + count.ToString();
+            if (count >= 10)
+            {
+                winTextObject.SetActive(true);
+            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -62,6 +83,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (other.gameObject.CompareTag("PickUp"))
             {
                 other.gameObject.SetActive(false);
+
+                count = count + 1;
+
+                SetCountText();
             }
         }
 
